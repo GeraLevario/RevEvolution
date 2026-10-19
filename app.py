@@ -10,6 +10,7 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database import inicializar_db, conectar
+from ejercicios_iniciales import cargar_ejercicios
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get(
@@ -18,6 +19,8 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 inicializar_db()
+cargar_ejercicios()
+
 
 
 # ---------- AUTENTICACIÓN ----------
