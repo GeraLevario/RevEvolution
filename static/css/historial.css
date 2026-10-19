@@ -1,0 +1,331 @@
+
+/* ========================================
+   REPEVOLUTION — ESTILOS DEL HISTORIAL
+   ======================================== */
+
+.history-page {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+.history-heading {
+    margin-bottom: 24px;
+}
+
+.history-heading h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.history-heading p {
+    color: #858993;
+}
+
+/* Estadísticas */
+
+.history-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.history-stat,
+.history-card {
+    background: linear-gradient(145deg, #1c1f27, #171920);
+    border: 1px solid #30333d;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.history-stat {
+    padding: 18px 20px;
+}
+
+.history-stat span {
+    display: block;
+    color: #858993;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.history-stat strong {
+    font-size: 28px;
+    color: #ff6d00;
+}
+
+/* Contenedor principal */
+
+.history-card {
+    padding: 24px;
+}
+
+.history-card > h2 {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+/* Tarjetas de sesiones */
+
+.history-entry {
+    background: #1b1e26;
+    border: 1px solid #30343e;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 14px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.history-entry:hover {
+    border-color: #ff6d00;
+    transform: translateY(-2px);
+}
+
+.history-entry:last-child {
+    margin-bottom: 0;
+}
+
+.history-entry h3 {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.history-entry p {
+    color: #858993;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Resumen de la sesión */
+
+.history-entry .history-summary {
+    background: #252832;
+    border: 1px solid #343842;
+    border-radius: 9px;
+    padding: 13px 15px;
+    color: #f4f4f2;
+    line-height: 1.8;
+    margin-top: 4px;
+}
+
+/* Enlaces y botones */
+
+.history-entry a {
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.history-entry a:hover {
+    color: #ff9147 !important;
+}
+
+.history-entry button {
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.history-entry button:hover {
+    background: #ff6d00 !important;
+    color: #111318 !important;
+}
+
+/* Historial vacío */
+
+.history-empty {
+    color: #858993;
+    padding: 20px 0;
+}
+
+/* Acciones inferiores */
+
+.history-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.history-actions a {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    background: #ff6d00;
+    color: #111318;
+}
+
+.history-actions a.secondary {
+    background: #191c23;
+    color: #f4f4f2;
+    border: 1px solid #2a2d35;
+}
+
+/* Adaptación a pantallas pequeñas */
+
+@media (min-width: 760px) {
+    .history-entry {
+        padding: 22px 24px;
+    }
+
+    .history-entry .history-summary {
+        padding: 15px 18px;
+    }
+}
+
+@media (max-width: 650px) {
+    .history-page {
+        margin-top: 24px;
+        padding: 0 14px;
+    }
+
+    .history-card {
+        padding: 14px;
+    }
+
+    .history-entry {
+        padding: 15px;
+    }
+
+    .history-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .history-stat {
+        padding: 15px;
+    }
+
+    .history-stat strong {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 360px) {
+    .history-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   HISTORIAL COMPACTO EN CUADRÍCULA
+   ======================================== */
+
+/* Varias tarjetas por fila */
+#history-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+}
+
+/* Tarjeta individual compacta */
+#history-list .history-entry {
+    min-width: 0;
+    margin: 0;
+    padding: 16px;
+    gap: 8px;
+    align-content: start;
+    border-radius: 12px;
+}
+
+/* Título de la rutina */
+#history-list .history-entry h3 {
+    font-size: 16px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+/* Fecha, día y estado */
+#history-list .history-entry p:not(.history-summary) {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Resumen más pequeño */
+#history-list .history-entry .history-summary {
+    margin-top: 4px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Acciones de cada tarjeta */
+#history-list .history-entry > div {
+    gap: 10px !important;
+    margin-top: 8px !important;
+}
+
+#history-list .history-entry a {
+    font-size: 12px;
+}
+
+#history-list .history-entry button {
+    padding: 8px 10px !important;
+    font-size: 10px;
+}
+
+/* Pantallas pequeñas: una tarjeta por fila */
+@media (max-width: 650px) {
+    #history-list {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    #history-list .history-entry {
+        padding: 14px;
+    }
+}
+/* Tipografía mejorada para las tarjetas del historial */
+#history-list .history-entry h3 {
+    color: #f4f4f2;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+#history-list .history-entry .history-date,
+#history-list .history-entry p:not(.history-summary) {
+    color: #a7a7ad;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 1.6;
+}
+
+#history-list .history-entry .history-summary {
+    color: #dedee3 !important;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: 0.1px;
+}
+
+#history-list .history-entry a {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+#history-list .history-entry a:hover {
+    color: #ff8a33 !important;
+}
+
+#history-list .history-entry {
+    position: relative;
+}

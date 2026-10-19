@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial | RepEvolution</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/entrenamiento.css') }}">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/historial.css') }}">
+
+
+
+
+</head>
+
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/">
+        <span class="brand-mark">
+            <svg viewBox="0 0 48 48"
+                 xmlns="http://www.w3.org/2000/svg"
+                 role="img"
+                 aria-label="Logo RepEvolution">
+                <rect x="3" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="8" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="36" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="41" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <path d="M11 24 H17 L23 18 L28 21 L34 14"
+                      fill="none"
+                      stroke="#F4F4F2"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span class="brand-name">Rep<span>Evolution</span></span>
+    </a>
+
+    <div class="header-motivation">
+        SUPERA TUS LÍMITES. MIDE TU EVOLUCIÓN.
+    </div>
+
+    <div class="header-actions">
+        <a class="back-link" href="{{ url_for('entrenamiento') }}">
+            ← Entrenamiento
+        </a>
+
+        <a class="back-link" href="{{ url_for('inicio') }}">
+            Página principal
+        </a>
+
+        <form action="{{ url_for('logout') }}" method="POST"
+              class="logout-form">
+            <button type="submit" class="logout-button">
+                CERRAR SESIÓN
+            </button>
+        </form>
+    </div>
+</header>
+
+
+    <main class="history-page">
+        <header class="history-heading">
+            <h1>MI HISTORIAL</h1>
+            <p>Revisa tus sesiones y sigue construyendo tu progreso.</p>
+        </header>
+
+        <section class="history-stats">
+            <article class="history-stat">
+                <span>Entrenamientos registrados</span>
+                <strong id="history-total">—</strong>
+            </article>
+
+            <article class="history-stat">
+                <span>Último entrenamiento</span>
+                <strong id="history-last" style="font-size:18px">—</strong>
+            </article>
+
+            <article class="history-stat">
+                <span>Estado</span>
+                <strong style="font-size:18px">EN EVOLUCIÓN</strong>
+            </article>
+        </section>
+
+        <section class="history-card">
+            <h2>Entrenamientos anteriores</h2>
+            <div id="history-list" aria-live="polite">
+                <p class="history-empty">Cargando historial...</p>
+            </div>
+        </section>
+
+        <nav class="history-actions">
+            <a href="{{ url_for('entrenamiento') }}">IR A ENTRENAMIENTO</a>
+            <a class="secondary" href="{{ url_for('inicio') }}">PÁGINA PRINCIPAL</a>
+        </nav>
+    </main>
+
+    <script>
+        async function cargarHistorial() {
+            const lista = document.getElementById("history-list");
+
+            try {
+                // Esta página necesita una ruta GET que devuelva
+                // las sesiones del usuario actual.
+                const respuesta = await fetch("/api/historial");
+
+                if (respuesta.status === 401 || respuesta.status === 403) {
+                    lista.innerHTML =
+                        '<p class="history-empty">Inicia sesión para consultar tu historial.</p>';
+                    return;
+                }
+
+                if (!respuesta.ok) {
+                    throw new Error("No se pudo consultar el historial.");
+                }
+
+                const datos = await respuesta.json();
+
+                // Acepta una lista directa o un objeto con la propiedad sesiones.
+                const sesiones = Array.isArray(datos)
+                    ? datos
+                    : (datos.sesiones || []);
+
+                document.getElementById("history-total").textContent =
+                    sesiones.length;
+
+                lista.innerHTML = "";
+
+                if (sesiones.length === 0) {
+                    lista.innerHTML =
+                        '<p class="history-empty">Todavía no hay entrenamientos registrados. ¡Tu próxima sesión aparecerá aquí!</p>';
+                    return;
+                }
+
+                const primeraFecha = sesiones[0].fecha ||
+    sesiones[0].fecha_inicio ||
+    sesiones[0].created_at;
+
+document.getElementById("history-last").textContent =
+    primeraFecha
+        ? new Date(
+            primeraFecha.replace(" ", "T")
+          ).toLocaleDateString("es-MX")
+        : "Registrado";
+
+                        
+                
+sesiones.forEach((sesion) => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "history-entry";
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = sesion.nombre_rutina || "Entrenamiento";
+
+    const fecha = document.createElement("p");
+fecha.className = "history-date";
+
+fecha.textContent = "Fecha: " + (
+    sesion.fecha
+        ? new Date(sesion.fecha.replace(" ", "T")).toLocaleDateString("es-MX", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        })
+        : "No disponible"
+);
+
+    
+
+    const estado = document.createElement("p");
+    estado.textContent = "Estado: " + (sesion.estado || "No disponible");
+
+
+    const resumen = document.createElement("p");
+    resumen.className = "history-summary";
+    resumen.textContent = "Cargando resumen del entrenamiento...";
+    resumen.style.marginTop = "10px";
+    resumen.style.color = "#f4f4f2";
+
+    fetch(`/api/historial/${sesion.id}`)
+        .then((respuesta) => {
+            if (!respuesta.ok) {
+                throw new Error("No se pudo consultar el resumen.");
+            }
+            return respuesta.json();
+        })
+        .then((datos) => {
+            const ejercicios = datos.ejercicios || [];
+
+            let totalSeries = 0;
+            let seriesCompletadas = 0;
+            let volumen = 0;
+
+            ejercicios.forEach((ejercicio) => {
+                (ejercicio.series || []).forEach((serie) => {
+                    totalSeries++;
+
+                    if (Number(serie.completada) === 1) {
+                        seriesCompletadas++;
+                        volumen +=
+                            Number(serie.peso_kg || 0) *
+                            Number(serie.repeticiones || 0);
+                    }
+                });
+            });
+
+            resumen.textContent =
+                `Ejercicios: ${ejercicios.length} · ` +
+                `Series completadas: ${seriesCompletadas}/${totalSeries} · ` +
+                `Volumen: ${Math.round(volumen).toLocaleString("es-MX")} kg`;
+        })
+        .catch(() => {
+            resumen.textContent =
+                "El resumen detallado no está disponible.";
+        });
+
+
+
+     tarjeta.appendChild(titulo);
+    tarjeta.appendChild(fecha);
+    tarjeta.appendChild(estado);
+    tarjeta.appendChild(resumen);
+
+    const detalle = document.createElement("a");
+    detalle.href = `/historial/${sesion.id}`;
+    detalle.textContent = "VER ENTRENAMIENTO →";
+    detalle.style.color = "#ff6d00";
+    detalle.style.display = "inline-block";
+    detalle.style.marginTop = "10px";
+
+    
+
+    
+    const acciones = document.createElement("div");
+    acciones.style.display = "flex";
+    acciones.style.gap = "16px";
+    acciones.style.flexWrap = "wrap";
+    acciones.style.alignItems = "center";
+    acciones.style.marginTop = "12px";
+
+    acciones.appendChild(detalle);
+
+    
+const eliminar = document.createElement("button");
+eliminar.type = "button";
+eliminar.title = "Eliminar entrenamiento";
+eliminar.setAttribute("aria-label", "Eliminar entrenamiento");
+
+eliminar.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="17" height="17"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="1.8"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6l-1 14H6L5 6"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+        <path d="M9 6V4h6v2"></path>
+    </svg>
+`;
+
+
+eliminar.style.background = "#241B16";
+eliminar.style.color = "#FF6D00";
+eliminar.style.border = "1px solid #493020";
+eliminar.style.borderRadius = "9px";
+eliminar.style.padding = "0";
+eliminar.style.width = "40px";
+eliminar.style.height = "40px";
+eliminar.style.display = "flex";
+eliminar.style.alignItems = "center";
+eliminar.style.justifyContent = "center";
+eliminar.style.cursor = "pointer";
+eliminar.style.flexShrink = "0";
+eliminar.style.position = "absolute";
+eliminar.style.top = "12px";
+eliminar.style.right = "12px";
+
+eliminar.querySelector("svg").setAttribute("width", "22");
+eliminar.querySelector("svg").setAttribute("height", "22");
+
+
+
+
+
+    eliminar.addEventListener("click", async () => {
+        const confirmar = window.confirm(
+            `¿Seguro que quieres eliminar "${sesion.nombre_rutina || "este entrenamiento"}"? Esta acción no se puede deshacer.`
+        );
+
+        if (!confirmar) return;
+
+        eliminar.disabled = true;
+        eliminar.textContent = "ELIMINANDO...";
+
+        try {
+            const respuesta = await fetch(
+                `/api/historial/${sesion.id}`,
+                { method: "DELETE" }
+            );
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok) {
+                throw new Error(
+                    resultado.error || "No se pudo eliminar el entrenamiento."
+                );
+            }
+
+            tarjeta.remove();
+
+            const total = document.getElementById("history-list")
+                .querySelectorAll(".history-entry").length;
+
+            document.getElementById("history-total").textContent = total;
+
+            if (total === 0) {
+                lista.innerHTML =
+                    '<p class="history-empty">Todavía no hay entrenamientos registrados. ¡Tu próxima sesión aparecerá aquí!</p>';
+                document.getElementById("history-last").textContent = "—";
+            } else {
+                const primera = lista.querySelector(".history-entry");
+                const fechaPrimera = primera?.querySelector("p")?.textContent;
+
+                document.getElementById("history-last").textContent =
+                    fechaPrimera
+                        ? fechaPrimera.replace("Fecha: ", "")
+                        : "Registrado";
+            }
+
+        } catch (error) {
+            alert(error.message);
+            eliminar.disabled = false;
+            eliminar.textContent = "ELIMINAR ENTRENAMIENTO";
+        }
+    });
+
+    acciones.appendChild(eliminar);
+    tarjeta.appendChild(acciones);
+    lista.appendChild(tarjeta);
+
+
+
+
+
+});
+
+
+            } catch (error) {
+                lista.innerHTML =
+                    '<p class="history-empty">No pudimos cargar el historial. Primero verificaremos la ruta de sesiones para conectarla correctamente.</p>';
+                console.error(error);
+            }
+        }
+
+        cargarHistorial();
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | RepEvolution</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .auth-container {
+            width: min(420px, 90%);
+            margin: 70px auto;
+        }
+        .auth-card {
+            background: #171717;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 32px;
+        }
+        .auth-card h1 {
+         font-size: 54px;
+        line-height: 1.3;
+        margin-bottom: 30px;
+        }
+        .auth-card p {
+            color: #aaa;
+            margin-bottom: 24px;
+        }
+        .auth-card label {
+            display: block;
+            margin: 16px 0 8px;
+        }
+        .auth-card input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #222;
+            color: white;
+        }
+        .auth-card button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #FF6D00;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .auth-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .auth-error {
+            color: #ff8a65;
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Bienvenido a <span style="color:#FF6D00">RepEvolution</span></h1>
+            <p>Inicia sesión para continuar tu evolución.</p>
+
+            {% with mensajes = get_flashed_messages() %}
+                {% for mensaje in mensajes %}
+                    <div class="auth-error">{{ mensaje }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <label for="correo">Correo electrónico</label>
+                <input id="correo" name="correo" type="email"
+                       maxlength="254" autocomplete="email" required>
+
+                <label for="password">Contraseña</label>
+                <input id="password" name="password" type="password"
+                       autocomplete="current-password" required>
+
+                <button type="submit">Iniciar sesión</button>
+            </form>
+
+            <a class="auth-link" href="{{ url_for('registro') }}">
+                ¿No tienes cuenta? Regístrate
+            </a>
+        </section>
+    </main>
+</body>
+</html>

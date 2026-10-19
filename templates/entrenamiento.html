@@ -1,0 +1,2393 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenamiento | RepEvolution</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/entrenamiento.css') }}">
+</head>
+<body>
+
+
+
+<header class="topbar">
+    <a class="brand" href="/">
+        <span class="brand-mark">
+            <svg viewBox="0 0 48 48"
+                 xmlns="http://www.w3.org/2000/svg"
+                 role="img"
+                 aria-label="Logo RepEvolution">
+                <rect x="3" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="8" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="36" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="41" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <path d="M11 24 H17 L23 18 L28 21 L34 14"
+                      fill="none"
+                      stroke="#F4F4F2"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span class="brand-name">Rep<span>Evolution</span></span>
+    </a>
+
+    <div class="header-motivation">
+        SUPERA TUS LÍMITES. MIDE TU EVOLUCIÓN.
+    </div>
+
+
+
+
+    
+    <div class="header-actions">
+
+
+        <a class="back-link" href="{{ url_for('pagina_historial') }}">
+           Mi historial
+        </a>
+        <a class="back-link" href="{{ url_for('inicio') }}">
+            ← Página principal
+        </a>
+
+        <form action="{{ url_for('logout') }}" method="POST"
+              class="logout-form">
+            <button type="submit" class="logout-button">
+                CERRAR SESIÓN
+            </button>
+        </form>
+    </div>
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+        <span class="eyebrow">TU PROGRESO EMPIEZA AQUÍ / 001</span>
+        <h1>HOY ES DÍA DE <span>EVOLUCIONAR.</span></h1>
+        <p>Prepara tu sesión, registra cada repetición y construye tu progreso.</p>
+    </section>
+
+    <section class="session-bar">
+        <div>
+            <span class="muted">SESIÓN ACTUAL</span>
+            <h2>Mi entrenamiento</h2>
+        </div>
+        <div class="session-date">
+            <span class="muted">ESTADO</span>
+            <strong id="session-status"><span class="status-dot"></span> Por comenzar</strong>
+        </div>
+    </section>
+
+    <section class="setup panel">
+        <div class="section-heading">
+            <span class="number">01</span>
+            <div>
+                <h2>Configura tu sesión</h2>
+                <p>Personaliza el entrenamiento de hoy.</p>
+            </div>
+        </div>
+
+ 
+<div class="fields">
+
+    <!-- Selector del día -->
+    <div class="day-selector">
+        <span class="field-label">Día de entrenamiento</span>
+
+        <div class="week-days" id="week-days">
+            <button type="button" class="day-card" data-day="Lunes">
+                <span>LUN</span><strong>01</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Martes">
+                <span>MAR</span><strong>02</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Miércoles">
+                <span>MIÉ</span><strong>03</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Jueves">
+                <span>JUE</span><strong>04</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Viernes">
+                <span>VIE</span><strong>05</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Sábado">
+                <span>SÁB</span><strong>06</strong>
+            </button>
+            <button type="button" class="day-card" data-day="Domingo">
+                <span>DOM</span><strong>07</strong>
+            </button>
+        </div>
+
+        <select id="training-day" class="day-select-hidden" aria-label="Día de entrenamiento">
+            <option value="">Selecciona el día</option>
+            <option>Lunes</option>
+            <option>Martes</option>
+            <option>Miércoles</option>
+            <option>Jueves</option>
+            <option>Viernes</option>
+            <option>Sábado</option>
+            <option>Domingo</option>
+        </select>
+    </div>
+
+    <!-- Tarjetas de configuración en una misma cuadrícula -->
+    <div class="training-config-grid">
+
+       
+<div class="config-card muscle-config-card">
+
+    <span class="config-card-heading">
+        <span class="config-icon">✦</span>
+        <span>
+            <strong>Nombre del entrenamiento</strong>
+            <small>Personaliza tu sesión</small>
+        </span>
+    </span>
+
+    <div class="training-name-row">
+        <input
+            id="training-name"
+            type="text"
+            placeholder="Ej. Pecho y tríceps"
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            class="muscle-toggle-button"
+            id="muscle-toggle-button"
+            aria-expanded="false"
+            aria-controls="muscle-selector-panel"
+        >
+            <span>＋</span> Músculos
+        </button>
+    </div>
+
+
+<div class="muscle-modal-backdrop" id="muscle-modal-backdrop" hidden></div>
+
+
+    <div class="muscle-selector-panel" id="muscle-selector-panel" hidden>
+
+<div class="muscle-modal-header">
+    <div>
+        <strong>Selecciona tus músculos</strong>
+        <small>Puedes elegir varios grupos</small>
+    </div>
+
+    <button type="button" id="muscle-close-button" aria-label="Cerrar ventana">
+        ✕
+    </button>
+</div>
+<div class="muscle-modal-actions">
+    <button type="button" id="muscle-cancel-button">Cancelar</button>
+    <button type="button" id="muscle-confirm-button">Confirmar selección</button>
+</div>
+
+
+
+        <div class="muscle-options" id="muscle-options">
+
+            <button type="button" class="muscle-option" data-muscle="Pecho" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/pecho.svg') }}" alt="" class="muscle-illustration">
+                <small>Pecho</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Espalda" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/espalda.svg') }}" alt="" class="muscle-illustration">
+                <small>Espalda</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Pierna" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/pierna.svg') }}" alt="" class="muscle-illustration">
+                <small>Pierna</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Hombros" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/hombros.svg') }}" alt="" class="muscle-illustration">
+                <small>Hombros</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Bíceps" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/biceps.svg') }}" alt="" class="muscle-illustration">
+                <small>Bíceps</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Tríceps" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/triceps.svg') }}" alt="" class="muscle-illustration">
+                <small>Tríceps</small>
+            </button>
+
+            <button type="button" class="muscle-option" data-muscle="Abdomen" aria-pressed="false">
+                <img src="{{ url_for('static', filename='images/musculos/abdomen.svg') }}" alt="" class="muscle-illustration">
+                <small>Abdomen</small>
+            </button>
+
+        </div>
+    </div>
+
+</div>
+
+
+        <!-- Objetivo de la sesión -->
+        <div class="config-card goal-config-card">
+            <span class="config-card-heading">
+                <span class="config-icon">◎</span>
+                <span>
+                    <strong>Objetivo de la sesión</strong>
+                    <small>Selecciona tu enfoque</small>
+                </span>
+            </span>
+
+            <div class="goal-options" id="goal-options">
+                <button type="button" class="goal-option" data-goal="Ganar músculo" aria-pressed="false">
+                    <span class="goal-illustration">💪</span>
+                    <span>Músculo</span>
+                </button>
+
+                <button type="button" class="goal-option" data-goal="Ganar fuerza" aria-pressed="false">
+                    <span class="goal-illustration">🏋️</span>
+                    <span>Fuerza</span>
+                </button>
+
+                <button type="button" class="goal-option" data-goal="Perder grasa" aria-pressed="false">
+                    <span class="goal-illustration">🔥</span>
+                    <span>Perder grasa</span>
+                </button>
+
+                <button type="button" class="goal-option" data-goal="Resistencia" aria-pressed="false">
+                    <span class="goal-illustration">❤️</span>
+                    <span>Resistencia</span>
+                </button>
+            </div>
+
+            <select id="training-goal" class="day-select-hidden" aria-label="Objetivo de la sesión">
+                <option value="">Selecciona tu objetivo</option>
+                <option>Ganar músculo</option>
+                <option>Ganar fuerza</option>
+                <option>Perder grasa</option>
+                <option>Resistencia</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+
+</section>
+
+<section class="workout panel">
+
+        <div class="routine-heading">
+            <div class="section-heading">
+                <span class="number">02</span>
+                <div>
+                    <h2>Tu rutina</h2>
+                    <p>Agrega los ejercicios que vas a realizar.</p>
+                </div>
+            </div>
+
+            <div class="routine-summary">
+                <div class="routine-summary-title">
+                    <span>LISTA DE EJERCICIOS</span>
+                    <span id="routine-count">1 ejercicio</span>
+                </div>
+                <div id="routine-exercise-summary" class="routine-summary-list"></div>
+            </div>
+        </div>
+
+        <div class="unit-selector">
+            <span>UNIDAD DE PESO</span>
+            <div class="unit-options">
+                <button type="button" class="unit-button active" data-unit="kg">KG</button>
+                <button type="button" class="unit-button" data-unit="lb">LB</button>
+            </div>
+        </div>
+
+
+
+                                                                                        
+
+<section class="exercise-library" id="exercise-library">
+   
+
+<div class="library-heading">
+    <div>
+        <span class="section-kicker">TU CATÁLOGO</span>
+        <h2>Biblioteca de ejercicios</h2>
+        <p>Busca y añade ejercicios a tu rutina.</p>
+    </div>
+    <span class="library-count" id="library-count">21 ejercicios</span>
+</div>
+
+<button
+    type="button"
+    id="toggle-library"
+    class="library-toggle"
+    aria-expanded="false"
+>
+    <span id="toggle-library-text">+ Explorar ejercicios</span>
+    <span>⌄</span>
+</button>
+
+<div id="library-browser" hidden>
+    <label class="library-search">
+        <span>Buscar ejercicio</span>
+        <input
+            type="search"
+            id="library-search"
+            placeholder="Ej. Press de banca..."
+        >
+    </label>
+
+    <div class="library-filters" id="library-filters">
+        
+        <button type="button" class="library-filter" data-group="Pecho">Pecho</button>
+        <button type="button" class="library-filter" data-group="Espalda">Espalda</button>
+        <button type="button" class="library-filter" data-group="Pierna">Pierna</button>
+        <button type="button" class="library-filter" data-group="Hombros">Hombros</button>
+        <button type="button" class="library-filter" data-group="Bíceps">Bíceps</button>
+        <button type="button" class="library-filter" data-group="Tríceps">Tríceps</button>
+        <button type="button" class="library-filter" data-group="Abdomen">Abdomen</button>
+    </div>
+
+    <div id="library-results" class="library-results">
+        <p>Cargando ejercicios...</p>
+    </div>
+
+    <p id="library-message" class="library-message" aria-live="polite"></p>
+</div>
+                                                                            
+
+
+ <div id="exercise-list">
+            <article class="exercise">
+                <div class="exercise-title">
+                    <span class="exercise-index">01</span>
+                    <label>
+                        <span>Ejercicio</span>
+                        <input type="text" placeholder="Ej. Press de banca">
+                    </label>
+                </div>
+
+                <div class="exercise-fields">
+                    <label>
+                        Series
+                        <input type="number" min="1" max="30" value="4">
+                    </label>
+                    <label>
+                        Repeticiones
+                        <input type="number" min="1" max="500" value="10">
+                    </label>
+                    <label class="weight-field">
+                        <span class="weight-label">Peso (KG)</span>
+                        <input type="number" class="weight-input" min="0" step="0.5" placeholder="0">
+                    </label>
+                </div>
+            </article>
+        </div>
+
+        <button class="secondary-button" id="add-exercise" type="button">
+            + Agregar ejercicio
+        </button>
+
+        <button class="primary-button" id="start-workout" type="button">
+            Comenzar entrenamiento <span>↗</span>
+        </button>
+
+        <p class="hint" id="workout-message">
+            Configura tus ejercicios para preparar la sesión.
+        </p>
+    </section>
+
+    <footer>
+        <span>REPEVOLUTION © 2026</span>
+        <span>TRAIN · TRACK · EVOLVE</span>
+    </footer>
+
+</main>
+
+<script>
+
+
+
+const muscleToggleButton = document.getElementById("muscle-toggle-button");
+const muscleSelectorPanel = document.getElementById("muscle-selector-panel");
+const muscleModalBackdrop = document.getElementById("muscle-modal-backdrop");
+
+function abrirVentanaMusculos() {
+    muscleSelectorPanel.hidden = false;
+    muscleModalBackdrop.hidden = false;
+    muscleToggleButton.setAttribute("aria-expanded", "true");
+}
+
+function cerrarVentanaMusculos() {
+    muscleSelectorPanel.hidden = true;
+    muscleModalBackdrop.hidden = true;
+    muscleToggleButton.setAttribute("aria-expanded", "false");
+}
+
+const muscleCloseButton = document.getElementById("muscle-close-button");
+const muscleCancelButton = document.getElementById("muscle-cancel-button");
+const muscleConfirmButton = document.getElementById("muscle-confirm-button");
+const muscleOptions = document.getElementById("muscle-options");
+
+let selectedMuscles = [];
+
+muscleOptions?.querySelectorAll(".muscle-option").forEach(button => {
+    button.addEventListener("click", () => {
+        const muscle = button.dataset.muscle;
+        const isSelected = selectedMuscles.includes(muscle);
+
+        if (isSelected) {
+            selectedMuscles = selectedMuscles.filter(item => item !== muscle);
+        } else {
+            selectedMuscles.push(muscle);
+        }
+
+        button.classList.toggle("active", !isSelected);
+        button.setAttribute("aria-pressed", String(!isSelected));
+    });
+});
+
+muscleCloseButton?.addEventListener("click", cerrarVentanaMusculos);
+muscleCancelButton?.addEventListener("click", cerrarVentanaMusculos);
+
+muscleConfirmButton?.addEventListener("click", () => {
+    const trainingName = document.getElementById("training-name");
+
+    if (selectedMuscles.length > 0 && trainingName) {
+    
+        trainingName.value = selectedMuscles.length === 1
+    ? selectedMuscles[0]
+    : selectedMuscles.length === 2
+        ? selectedMuscles.join(" y ")
+        : selectedMuscles.slice(0, -1).join(", ") +
+          " y " + selectedMuscles[selectedMuscles.length - 1];
+
+        trainingName.dispatchEvent(new Event("input", { bubbles: true }));
+        trainingName.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    cerrarVentanaMusculos();
+});
+
+if (muscleToggleButton && muscleSelectorPanel && muscleModalBackdrop) {
+    muscleToggleButton.addEventListener("click", abrirVentanaMusculos);
+    muscleModalBackdrop.addEventListener("click", cerrarVentanaMusculos);
+} else {
+    console.error("Falta un elemento de la ventana de músculos:", {
+        boton: !!muscleToggleButton,
+        panel: !!muscleSelectorPanel,
+        fondo: !!muscleModalBackdrop
+    });
+}
+
+
+
+
+const exerciseList = document.getElementById("exercise-list");
+const addButton = document.getElementById("add-exercise");
+const startButton = document.getElementById("start-workout");
+const message = document.getElementById("workout-message");
+const sessionStatus = document.getElementById("session-status");
+
+let currentUnit = "kg";
+
+const CONFIG_KEY = "repevolution_config_dias";
+
+
+function guardarConfigDia() {
+    const dia = document.getElementById("training-day").value;
+    if (!dia) return;
+
+    const configuraciones = JSON.parse(
+        localStorage.getItem(CONFIG_KEY) || "{}"
+    );
+
+    // Solo guardamos los músculos localmente.
+    // El nombre y el objetivo pertenecen a la base de datos.
+    configuraciones[dia] = {
+        ...(configuraciones[dia] || {}),
+        musculos: [...selectedMuscles]
+    };
+
+    localStorage.setItem(
+        CONFIG_KEY,
+        JSON.stringify(configuraciones)
+    );
+}
+
+function recuperarConfigDia(dia) {
+    const configuraciones = JSON.parse(
+        localStorage.getItem(CONFIG_KEY) || "{}"
+    );
+
+    return configuraciones[dia] || {};
+}
+
+    
+   
+
+
+
+// Los músculos se conservan localmente por día.
+// El nombre y el objetivo se guardan en la base de datos.
+document.getElementById("training-name").addEventListener(
+    "input",
+    () => {
+        guardarConfigDia();
+    }
+);
+
+
+
+let sessionStarted = false;
+let sessionFinished = false;
+
+
+
+let currentSessionId = null;
+let saveQueue = Promise.resolve();
+
+function obtenerDatosSesion(estado = "en_progreso") {
+    const ejercicios = [
+        ...sessionArea.querySelectorAll(".session-exercise")
+    ].map(card => {
+        const nombre = card.querySelector(".session-exercise-title")
+            .textContent.split(" · ").slice(1).join(" · ");
+
+        const filas = [
+            ...card.querySelectorAll(".set-row:not(.set-header)")
+        ];
+
+        return {
+            nombre,
+            series: filas.map(fila => {
+                const inputs = fila.querySelectorAll('input[type="number"]');
+                const pesoVisible = Number(inputs[0].value || 0);
+                const repeticiones = Number(inputs[1].value || 0);
+
+                return {
+                    peso: currentUnit === "lb"
+                        ? pesoVisible / 2.2046226218
+                        : pesoVisible,
+                    repeticiones,
+                    completada: fila.querySelector(".set-complete").checked
+                };
+            })
+        };
+    });
+
+    return {
+        nombre: document.getElementById("training-name").value.trim()
+            || "Mi entrenamiento",
+        dia: document.getElementById("training-day").value,
+        estado,
+        ejercicios
+    };
+}
+
+async function guardarSesion(estado = "en_progreso") {
+    const datos = obtenerDatosSesion(estado);
+
+    if (!datos.ejercicios.length) return;
+
+    // Enviar las operaciones en orden para evitar que se crucen.
+    const operacion = saveQueue.then(async () => {
+        const url = currentSessionId
+            ? `/api/sesiones/${currentSessionId}`
+            : "/api/sesiones";
+
+        const respuesta = await fetch(url, {
+            method: currentSessionId ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.error || "No se pudo guardar.");
+        }
+
+        if (resultado.sesion_id) {
+            currentSessionId = resultado.sesion_id;
+        }
+    });
+
+    saveQueue = operacion.catch(error => {
+        console.error("Error al guardar:", error);
+    });
+
+    await operacion;
+}
+
+
+
+
+
+// Área de entrenamiento activo.
+const sessionArea = document.createElement("section");
+sessionArea.id = "active-session";
+sessionArea.className = "panel active-session";
+sessionArea.hidden = true;
+document.querySelector(".workout.panel").after(sessionArea);
+
+// Crear un ID una sola vez por ejercicio.
+function setupExerciseCard(exercise) {
+    if (exercise.dataset.controlsReady === "true") return;
+
+    if (!exercise.dataset.exerciseId) {
+    exercise.dataset.exerciseId =
+        (window.crypto && typeof window.crypto.randomUUID === "function")
+            ? window.crypto.randomUUID()
+            : `exercise-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+    exercise.dataset.controlsReady = "true";
+    const initiallyConfirmed = exercise.dataset.confirmed === "true";
+
+    const actions = document.createElement("div");
+    actions.className = "exercise-actions";
+
+    const confirmButton = document.createElement("button");
+    confirmButton.type = "button";
+    confirmButton.className = "confirm-exercise";
+    confirmButton.textContent = "Confirmar ✓";
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "edit-exercise";
+    editButton.textContent = "Editar";
+    editButton.hidden = true;
+
+    actions.append(confirmButton, editButton);
+    exercise.querySelector(".exercise-fields").after(actions);
+
+    function setLocked(locked) {
+        exercise.querySelectorAll("input").forEach(input => {
+            input.disabled = locked;
+        });
+
+        exercise.dataset.confirmed = String(locked);
+        confirmButton.hidden = locked;
+        editButton.hidden = !locked;
+
+        updateRoutineSummary();
+    }
+
+
+// Restaurar el estado confirmado cuando la tarjeta ya viene guardada.
+setLocked(initiallyConfirmed);
+
+
+            confirmButton.addEventListener("click", () => {
+        if (sessionFinished) return;
+
+        const name = exercise.querySelector(".exercise-title input").value.trim();
+        const fields = exercise.querySelectorAll(".exercise-fields input");
+        const sets = Number(fields[0].value);
+        const reps = Number(fields[1].value);
+        const weight = fields[2].value === "" ? 0 : Number(fields[2].value);
+
+        if (!name) {
+            message.textContent = "Escribe el nombre del ejercicio antes de confirmarlo.";
+            return;
+        }
+
+        if (
+            !Number.isInteger(sets) || sets < 1 || sets > 30 ||
+            !Number.isInteger(reps) || reps < 1 || reps > 500 ||
+            !Number.isFinite(weight) || weight < 0
+        ) {
+            message.textContent = "Revisa las series, repeticiones y peso.";
+            return;
+        }
+
+        const exerciseData = {
+            id: exercise.dataset.exerciseId,
+            name,
+            sets,
+            reps,
+            weight
+        };
+
+        
+        // Bloquear el formulario y conservar el mismo ID.
+        setLocked(true);
+
+        if (sessionStarted) {
+            upsertSessionExercise(exerciseData);
+            message.textContent = `${name} actualizado en tu entrenamiento.`;
+        } else {
+            guardarRutinaHabitual();
+        }
+    });
+
+    editButton.addEventListener("click", () => {
+        if (sessionFinished) return;
+
+        setLocked(false);
+        message.textContent = "Puedes editar este ejercicio.";
+    });
+}
+
+
+
+
+// Configurar el ejercicio inicial.
+exerciseList.querySelectorAll(".exercise").forEach(setupExerciseCard);
+
+
+//GL
+async function guardarRutinaHabitual() {
+    const dia = document.getElementById("training-day").value;
+    const nombre = document.getElementById("training-name").value.trim()
+        || "Mi entrenamiento";
+    const objetivo = document.getElementById("training-goal").value;
+
+    if (!dia) {
+        message.textContent =
+            "Selecciona el día de entrenamiento antes de confirmar.";
+        return false;
+    }
+
+    const confirmados = [
+        ...exerciseList.querySelectorAll('.exercise[data-confirmed="true"]')
+    ];
+
+    const ejercicios = confirmados.map(exercise => {
+        const campos = exercise.querySelectorAll(".exercise-fields input");
+
+        const pesoVisible = Number(campos[2].value || 0);
+        const pesoKg = currentUnit === "lb"
+            ? pesoVisible / 2.2046226218
+            : pesoVisible;
+
+        return {
+            nombre: exercise.querySelector(".exercise-title input").value.trim(),
+            series: Number(campos[0].value),
+            repeticiones: Number(campos[1].value),
+            peso_kg: pesoKg
+        };
+    });
+
+    if (ejercicios.length === 0) {
+        message.textContent = "Confirma al menos un ejercicio.";
+        return false;
+    }
+
+    try {
+        const respuesta = await fetch("/api/rutinas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nombre,
+                dia,
+                objetivo,
+                ejercicios
+            })
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.error || "No se pudo guardar la rutina.");
+        }
+
+        message.textContent = `Rutina del ${dia} guardada correctamente.`;
+        return true;
+    } catch (error) {
+        console.error("Error al guardar la rutina:", error);
+        message.textContent = error.message || "Error al guardar la rutina.";
+        return false;
+    }
+}
+
+
+
+// Resumen visual de la rutina.
+function updateRoutineSummary() {
+    const summary = document.getElementById("routine-exercise-summary");
+    const count = document.getElementById("routine-count");
+    const exercises = [...exerciseList.querySelectorAll(".exercise")];
+
+    count.textContent =
+        `${exercises.length} ${exercises.length === 1 ? "ejercicio" : "ejercicios"}`;
+
+    summary.innerHTML = "";
+
+    if (exercises.length === 0) {
+        summary.innerHTML =
+            '<div class="routine-summary-empty">Agrega un ejercicio para comenzar.</div>';
+        return;
+    }
+
+    exercises.forEach((exercise, index) => {
+        const name = exercise.querySelector(".exercise-title input").value.trim()
+            || "Ejercicio sin nombre";
+
+        const confirmed = exercise.dataset.confirmed === "true";
+
+        const item = document.createElement("div");
+        item.className =
+            `routine-summary-item${confirmed ? " is-confirmed" : ""}`;
+
+        const number = document.createElement("span");
+        number.className = "summary-number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const title = document.createElement("span");
+        title.className = "summary-name";
+        title.textContent = name;
+
+        const status = document.createElement("span");
+        status.className = "summary-status";
+        status.textContent = confirmed ? "✓ CONFIRMADO" : "POR CONFIRMAR";
+
+        item.append(number, title, status);
+        summary.appendChild(item);
+    });
+}
+
+// Mantener el resumen actualizado mientras se escribe.
+exerciseList.addEventListener("input", event => {
+    if (event.target.matches(".exercise-title input")) {
+        updateRoutineSummary();
+    }
+});
+
+
+
+
+//GL
+
+
+async function cargarRutinaDelDia(dia) {
+    if (!dia || sessionStarted || sessionFinished) return;
+
+    try {
+        const respuesta = await fetch(
+            `/api/rutinas/${encodeURIComponent(dia)}`
+        );
+        const resultado = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(resultado.error || "No se pudo cargar la rutina.");
+        }
+
+        const rutina = resultado.rutina;
+        const configDia = recuperarConfigDia(dia);
+       
+if (!rutina) {
+    // Limpiar los datos del día anterior.
+    document.getElementById("training-name").value = "";
+    document.getElementById("training-goal").value = "";
+    actualizarObjetivoVisual();
+    exerciseList.innerHTML = "";
+
+    // Crear un ejercicio vacío para comenzar.
+    const nuevoEjercicio = document.createElement("article");
+    nuevoEjercicio.className = "exercise";
+
+    nuevoEjercicio.innerHTML = `
+        <div class="exercise-title">
+            <span class="exercise-index">01</span>
+            <label>
+                <span>Ejercicio</span>
+                <input type="text" placeholder="Nombre del ejercicio">
+            </label>
+        </div>
+        <div class="exercise-fields">
+            <label>
+                Series
+                <input type="number" min="1" max="30" value="3">
+            </label>
+            <label>
+                Repeticiones
+                <input type="number" min="1" max="500" value="10">
+            </label>
+            <label class="weight-field">
+                <span class="weight-label">
+                    Peso (${currentUnit.toUpperCase()})
+                </span>
+                <input type="number" class="weight-input"
+                       min="0"
+                       step="${currentUnit === "kg" ? "0.5" : "1"}"
+                       value="0">
+            </label>
+        </div>
+    `;
+
+    exerciseList.appendChild(nuevoEjercicio);
+    setupExerciseCard(nuevoEjercicio);
+    updateRoutineSummary();
+
+    message.textContent =
+        `No tienes una rutina guardada para ${dia}. Puedes crearla aquí.`;
+    return;
+}
+
+document.getElementById("training-name").value =
+    rutina.nombre ?? "";
+
+document.getElementById("training-goal").value =
+    rutina.objetivo ?? "";
+
+actualizarObjetivoVisual();
+
+
+selectedMuscles = configDia?.musculos ?? [];
+
+document.querySelectorAll(".muscle-option").forEach(button => {
+    const activo = selectedMuscles.includes(button.dataset.muscle);
+    button.classList.toggle("active", activo);
+    button.setAttribute("aria-pressed", String(activo));
+});
+
+        exerciseList.innerHTML = "";
+
+        rutina.ejercicios.forEach((ejercicio, index) => {
+            const item = document.createElement("article");
+            item.className = "exercise";
+
+            const peso = currentUnit === "lb"
+                ? Number((ejercicio.peso_kg * 2.2046226218).toFixed(1))
+                : ejercicio.peso_kg;
+
+            item.innerHTML = `
+                <div class="exercise-title">
+                    <span class="exercise-index">
+                        ${String(index + 1).padStart(2, "0")}
+                    </span>
+                    <label>
+                        <span>Ejercicio</span>
+                        <input type="text"
+                               value="${String(ejercicio.nombre)
+                                   .replaceAll("&", "&amp;")
+                                   .replaceAll('"', "&quot;")
+                                   .replaceAll("<", "&lt;")
+                                   .replaceAll(">", "&gt;")}">
+                    </label>
+                </div>
+                <div class="exercise-fields">
+                    <label>
+                        Series
+                        <input type="number" min="1" max="30"
+                               value="${ejercicio.series}">
+                    </label>
+                    <label>
+                        Repeticiones
+                        <input type="number" min="1" max="500"
+                               value="${ejercicio.repeticiones}">
+                    </label>
+                    <label class="weight-field">
+                        <span class="weight-label">
+                            Peso (${currentUnit.toUpperCase()})
+                        </span>
+                        <input type="number" class="weight-input"
+                               min="0"
+                               step="${currentUnit === "kg" ? "0.5" : "1"}"
+                               value="${peso}">
+                    </label>
+                </div>
+            `;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "delete-exercise";
+            deleteButton.textContent = "Eliminar ejercicio";
+            deleteButton.addEventListener("click", () => {
+                if (sessionStarted) return;
+
+                item.remove();
+
+                exerciseList.querySelectorAll(".exercise-index")
+                    .forEach((element, i) => {
+                        element.textContent = String(i + 1).padStart(2, "0");
+                    });
+
+                updateRoutineSummary();
+            });
+
+            item.appendChild(deleteButton);
+
+    // Los ejercicios recuperados de la rutina ya estaban guardados.
+    item.dataset.confirmed = "true";
+
+    exerciseList.appendChild(item);
+    setupExerciseCard(item);
+
+        });
+
+        updateRoutineSummary();
+        message.textContent = `Rutina del ${dia} cargada. Confirma los ejercicios para guardar cambios.`;
+
+    } catch (error) {
+        console.error("Error al cargar la rutina:", error);
+        message.textContent = "No se pudo cargar la rutina guardada.";
+    }
+}
+
+
+
+const trainingDay = document.getElementById("training-day");
+const weekDays = document.getElementById("week-days");
+
+const LAST_DAY_KEY = "repevolution_ultimo_dia";
+
+function guardarUltimoDia(dia) {
+    if (dia) {
+        localStorage.setItem(LAST_DAY_KEY, dia);
+    }
+}
+
+function recuperarUltimoDia() {
+    const diaGuardado = localStorage.getItem(LAST_DAY_KEY);
+
+    const diasValidos = [
+        "Lunes", "Martes", "Miércoles", "Jueves",
+        "Viernes", "Sábado", "Domingo"
+    ];
+
+    return diasValidos.includes(diaGuardado) ? diaGuardado : "";
+}
+
+function actualizarDiaSeleccionado(dia) {
+    guardarUltimoDia(dia);
+    weekDays.querySelectorAll(".day-card").forEach(button => {
+        const activo = button.dataset.day === dia;
+
+        button.classList.toggle("active", activo);
+        button.setAttribute("aria-pressed", String(activo));
+    });
+}
+
+weekDays.addEventListener("click", event => {
+    const button = event.target.closest(".day-card");
+
+    if (!button) return;
+
+    const dia = button.dataset.day;
+
+    trainingDay.value = dia;
+    actualizarDiaSeleccionado(dia);
+
+    trainingDay.dispatchEvent(new Event("change", { bubbles: true }));
+});
+
+trainingDay.addEventListener("change", async event => {
+    const dia = event.target.value;
+
+    actualizarDiaSeleccionado(dia);
+
+    if (dia) {
+        localStorage.setItem("repevolution_ultimo_dia", dia);
+
+        await cargarRutinaDelDia(dia);
+        actualizarObjetivoVisual();
+    }
+});
+
+// Recuperar el último día seleccionado.
+const diasValidos = [
+    "Lunes", "Martes", "Miércoles", "Jueves",
+    "Viernes", "Sábado", "Domingo"
+];
+
+const ultimoDia = localStorage.getItem("repevolution_ultimo_dia");
+
+const diaInicial = diasValidos.includes(ultimoDia)
+    ? ultimoDia
+    : trainingDay.value;
+
+if (diaInicial) {
+    trainingDay.value = diaInicial;
+    actualizarDiaSeleccionado(diaInicial);
+    cargarRutinaDelDia(diaInicial).then(() => {
+        actualizarObjetivoVisual();
+    });
+}
+
+
+
+
+
+
+// Cambiar KG/LB antes de iniciar.
+function updateWeightUnits(unit) {
+    currentUnit = unit;
+
+    document.querySelectorAll(".unit-button").forEach(button => {
+        button.classList.toggle("active", button.dataset.unit === unit);
+    });
+
+    document.querySelectorAll(".weight-label").forEach(label => {
+        label.textContent = `Peso (${unit.toUpperCase()})`;
+    });
+
+    document.querySelectorAll(".weight-input").forEach(input => {
+        input.step = unit === "kg" ? "0.5" : "1";
+    });
+}
+
+document.querySelectorAll(".unit-button").forEach(button => {
+    button.addEventListener("click", () => {
+        if (!sessionStarted) {
+            updateWeightUnits(button.dataset.unit);
+        }
+    });
+});
+
+// Agregar ejercicios a la rutina.
+addButton.addEventListener("click", () => {
+    if (sessionFinished) return;
+
+    const count = exerciseList.querySelectorAll(".exercise").length + 1;
+    const item = document.createElement("article");
+    item.className = "exercise";
+
+    item.innerHTML = `
+        <div class="exercise-title">
+            <span class="exercise-index">${String(count).padStart(2, "0")}</span>
+            <label>
+                <span>Ejercicio</span>
+                <input type="text" placeholder="Nombre del ejercicio">
+            </label>
+        </div>
+        <div class="exercise-fields">
+            <label>
+                Series
+                <input type="number" min="1" max="30" value="4">
+            </label>
+            <label>
+                Repeticiones
+                <input type="number" min="1" max="500" value="10">
+            </label>
+            <label class="weight-field">
+                <span class="weight-label">Peso (${currentUnit.toUpperCase()})</span>
+                <input type="number" class="weight-input"
+                       min="0" step="${currentUnit === "kg" ? "0.5" : "1"}"
+                       placeholder="0">
+            </label>
+        </div>
+    `;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "delete-exercise";
+    deleteButton.textContent = "Eliminar ejercicio";
+
+    deleteButton.addEventListener("click", () => {
+        // No borrar ejercicios una vez iniciada la sesión.
+        if (sessionStarted) return;
+
+        item.remove();
+
+        exerciseList.querySelectorAll(".exercise-index").forEach((index, i) => {
+            index.textContent = String(i + 1).padStart(2, "0");
+        });
+
+        updateRoutineSummary();
+    });
+
+    item.appendChild(deleteButton);
+    exerciseList.appendChild(item);
+
+    setupExerciseCard(item);
+    updateRoutineSummary();
+});
+
+
+// Construir o actualizar una tarjeta de la sesión usando el ID único.
+
+
+function upsertSessionExercise(exercise) {
+    const container = sessionArea.querySelector("#session-exercises");
+    if (!container) return;
+
+    let card = [...container.querySelectorAll(".session-exercise")]
+        .find(item => item.dataset.sourceExercise === String(exercise.id));
+
+    if (!card) {
+        card = document.createElement("article");
+        card.className = "session-exercise";
+        card.dataset.sourceExercise = String(exercise.id);
+
+        const heading = document.createElement("h3");
+        heading.className = "session-exercise-title";
+        card.appendChild(heading);
+
+        const table = document.createElement("div");
+        table.className = "sets-table";
+        card.appendChild(table);
+
+        container.appendChild(card);
+    }
+
+    const heading = card.querySelector(".session-exercise-title");
+    const exerciseIndex = [...exerciseList.querySelectorAll(".exercise")]
+        .findIndex(item => item.dataset.exerciseId === exercise.id);
+
+    heading.textContent =
+        `${String(exerciseIndex + 1).padStart(2, "0")} · ${exercise.name}`;
+
+    const table = card.querySelector(".sets-table");
+
+    const previousRows = [...table.querySelectorAll(".set-row:not(.set-header)")];
+
+    const savedSets = Array.isArray(exercise.series)
+        ? exercise.series
+        : null;
+
+    table.innerHTML = `
+        <div class="set-row set-header">
+            <span>Serie</span>
+            <span>Peso (${currentUnit.toUpperCase()})</span>
+            <span>Reps</span>
+            <span>Listo</span>
+        </div>
+    `;
+
+    const totalSets = savedSets ? savedSets.length : exercise.sets;
+
+    for (let i = 0; i < totalSets; i++) {
+        const row = document.createElement("div");
+        row.className = "set-row";
+
+        const number = document.createElement("span");
+        number.textContent = `Serie ${i + 1}`;
+
+        const weight = document.createElement("input");
+        weight.type = "number";
+        weight.min = "0";
+        weight.step = currentUnit === "kg" ? "0.5" : "1";
+
+        const repetitions = document.createElement("input");
+        repetitions.type = "number";
+        repetitions.min = "1";
+
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.className = "set-complete";
+        check.setAttribute("aria-label", `Completar serie ${i + 1}`);
+        check.addEventListener("change", updateProgress);
+
+
+
+              if (savedSets) {
+    const serie = savedSets[i];
+
+    const pesoKg = Number(serie.peso_kg ?? serie.peso ?? 0);
+    const repsGuardadas = Number(serie.repeticiones ?? 0);
+
+    weight.value = String(
+        currentUnit === "lb"
+            ? Number((pesoKg * 2.2046226218).toFixed(1))
+            : pesoKg
+    );
+
+    repetitions.value = String(repsGuardadas);
+    check.checked = Number(serie.completada) === 1;
+             }
+
+
+         else {
+            const previousRow = previousRows[i];
+            const previousInputs = previousRow
+                ? previousRow.querySelectorAll('input[type="number"]')
+                : null;
+
+            weight.value = previousInputs?.[0]?.value ?? exercise.weight;
+            repetitions.value = previousInputs?.[1]?.value ?? exercise.reps;
+
+            const previousCheck = previousRow?.querySelector(".set-complete");
+            check.checked = previousCheck?.checked ?? false;
+        }
+
+        row.append(number, weight, repetitions, check);
+        table.appendChild(row);
+    }
+
+    updateProgress();
+}
+
+
+
+// Actualizar contador y apariencia de las series.  //GL
+
+
+
+
+let workoutTimerInterval = null;
+let workoutElapsedSeconds = 0;
+let workoutStartedAt = null;
+
+function actualizarCronometro() {
+    const timer = sessionArea.querySelector("#session-timer");
+    if (!timer) return;
+
+    let elapsed = workoutElapsedSeconds;
+
+    if (workoutStartedAt !== null && !sessionFinished) {
+        elapsed += Math.floor((Date.now() - workoutStartedAt) / 1000);
+    }
+
+    const hours = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+
+    timer.textContent = `${hours}:${minutes}:${seconds}`;
+
+if (workoutStartedAt !== null && !sessionFinished) {
+    localStorage.setItem(
+        obtenerClaveCronometro(),
+        String(elapsed)
+    );
+}
+
+}
+
+
+function obtenerClaveCronometro() {
+    return `repevolution_elapsed_${currentSessionId || "nueva"}`;
+}
+
+function iniciarCronometro() {
+    if (workoutStartedAt !== null) return;
+
+    const guardado = localStorage.getItem(obtenerClaveCronometro());
+
+    if (guardado !== null) {
+        workoutElapsedSeconds = Number(guardado) || 0;
+    }
+
+    workoutStartedAt = Date.now();
+
+    clearInterval(workoutTimerInterval);
+    actualizarCronometro();
+
+    workoutTimerInterval = setInterval(actualizarCronometro, 1000);
+}
+
+function detenerCronometro() {
+    if (workoutStartedAt !== null) {
+        workoutElapsedSeconds += Math.floor(
+            (Date.now() - workoutStartedAt) / 1000
+        );
+
+        workoutStartedAt = null;
+    }
+
+    clearInterval(workoutTimerInterval);
+    workoutTimerInterval = null;
+
+    localStorage.setItem(
+        obtenerClaveCronometro(),
+        String(workoutElapsedSeconds)
+    );
+
+    actualizarCronometro();
+}
+
+
+
+
+function updateProgress() {
+    const checks = [...sessionArea.querySelectorAll(".set-complete")];
+    const completed = checks.filter(check => check.checked).length;
+    const total = checks.length;
+
+    const exercises = [...sessionArea.querySelectorAll(".session-exercise")];
+    const completedExercises = exercises.filter(exercise => {
+        const exerciseChecks = [...exercise.querySelectorAll(".set-complete")];
+        return exerciseChecks.length > 0 &&
+            exerciseChecks.every(check => check.checked);
+    }).length;
+
+    const percent = total > 0
+        ? Math.round((completed / total) * 100)
+        : 0;
+
+    const progress = sessionArea.querySelector("#session-progress");
+    if (progress) {
+        progress.textContent = `${completed} de ${total} series completadas`;
+    }
+
+    const setCount = sessionArea.querySelector("#session-set-count");
+    if (setCount) {
+        setCount.textContent = `${completed} / ${total}`;
+    }
+
+    const exerciseCount = sessionArea.querySelector("#session-exercise-count");
+    if (exerciseCount) {
+        exerciseCount.textContent = `${completedExercises} / ${exercises.length}`;
+    }
+
+    const percentLabel = sessionArea.querySelector("#session-percent");
+    if (percentLabel) {
+        percentLabel.textContent = `${percent}%`;
+    }
+
+    const progressFill = sessionArea.querySelector("#session-progress-fill");
+    if (progressFill) {
+        progressFill.style.width = `${percent}%`;
+    }
+
+    const progressTrack = sessionArea.querySelector("#session-progress-track");
+    if (progressTrack) {
+        progressTrack.setAttribute("aria-valuenow", String(percent));
+    }
+
+    checks.forEach(check => {
+        const row = check.closest(".set-row");
+        if (row) {
+            row.classList.toggle("completed", check.checked);
+        }
+    });
+
+    if (currentSessionId && !sessionFinished) {
+        clearTimeout(window.revolutionSaveTimer);
+        window.revolutionSaveTimer = setTimeout(() => {
+            guardarSesion("en_progreso");
+        }, 400);
+    }
+
+
+                                                                          //FRASES MOTIVADORAS EN BARRA DE PROGRESO
+const motivation = document.getElementById("motivation-message");
+
+if (motivation) {
+    const phrases = [
+        { min: 0,  text: "El primer paso es empezar. Vamos con todo." },
+        { min: 1,  text: "Cada repetición cuenta. Sigue avanzando." },
+        { min: 25, text: "La constancia construye resultados." },
+        { min: 50, text: "La mitad del camino. Mantén el enfoque." },
+        { min: 75, text: "Ya casi. No aflojes ahora." },
+        { min: 100, text: "¡Entrenamiento completado! El esfuerzo suma." }
+    ];
+
+    const currentPhrase = [...phrases]
+        .reverse()
+        .find(phrase => percent >= phrase.min);
+
+    motivation.textContent = currentPhrase.text;
+}
+
+
+
+
+}
+
+
+
+sessionArea.addEventListener("change", event => {
+    if (
+        event.target.matches('input[type="number"]') &&
+        currentSessionId &&
+        !sessionFinished
+    ) {
+        guardarSesion("en_progreso").catch(console.error);
+    }
+});
+
+
+
+// Iniciar entrenamiento.
+
+startButton.addEventListener("click", async () => {
+
+
+    if (sessionStarted || sessionFinished) return;
+
+    const exercises = [...exerciseList.querySelectorAll(".exercise")];
+
+    if (exercises.length === 0) {
+        message.textContent = "Agrega al menos un ejercicio.";
+        return;
+    }
+
+    const confirmedExercises = exercises.filter(
+        exercise => exercise.dataset.confirmed === "true"
+    );
+
+    if (confirmedExercises.length === 0) {
+        message.textContent = "Confirma al menos un ejercicio antes de comenzar.";
+        return;
+    }
+
+    const data = [];
+
+    for (const exercise of confirmedExercises) {
+        const name = exercise.querySelector(".exercise-title input").value.trim();
+        const fields = exercise.querySelectorAll(".exercise-fields input");
+        const sets = Number(fields[0].value);
+        const reps = Number(fields[1].value);
+        const weight = fields[2].value === "" ? 0 : Number(fields[2].value);
+
+        if (
+            !name ||
+            !Number.isInteger(sets) || sets < 1 || sets > 30 ||
+            !Number.isInteger(reps) || reps < 1 || reps > 500 ||
+            !Number.isFinite(weight) || weight < 0
+        ) {
+            message.textContent = "Revisa el nombre, las series, las repeticiones y el peso.";
+            return;
+        }
+
+        data.push({
+            id: exercise.dataset.exerciseId,
+            name,
+            sets,
+            reps,
+            weight
+        });
+    }
+
+    sessionStarted = true;
+    startButton.disabled = true;
+
+    document.querySelectorAll(".unit-button").forEach(button => {
+        button.disabled = true;
+    });
+
+    // Preparar el área de sesión.
+    sessionArea.hidden = false;
+    
+
+sessionArea.innerHTML = `
+    <div class="section-heading">
+        <span class="number">03</span>
+        <div>
+            <h2>Entrenamiento en curso</h2>
+            <p id="session-progress">0 de 0 series completadas</p>
+        </div>
+    </div>
+
+    <div class="session-dashboard">
+        <div class="session-stat">
+            <span class="session-stat-label">Tiempo entrenando</span>
+            <strong id="session-timer" class="session-stat-value is-accent">00:00:00</strong>
+        </div>
+        <div class="session-stat">
+            <span class="session-stat-label">Ejercicios</span>
+            <strong id="session-exercise-count" class="session-stat-value">0 / 0</strong>
+        </div>
+        <div class="session-stat">
+            <span class="session-stat-label">Series completadas</span>
+            <strong id="session-set-count" class="session-stat-value">0 / 0</strong>
+        </div>
+        <div class="session-stat">
+            <span class="session-stat-label">Progreso total</span>
+            <strong id="session-percent" class="session-stat-value is-accent">0%</strong>
+        </div>
+    </div>
+
+    <div id="motivation-message" class="motivation-message" aria-live="polite">
+         Cada repetición cuenta. Sigue avanzando.
+    </div>  
+
+
+
+    <div
+        id="session-progress-track"
+        class="session-progress-track"
+        role="progressbar"
+        aria-label="Progreso del entrenamiento"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+    >
+        <div id="session-progress-fill" class="session-progress-fill"></div>
+    </div>
+
+    <h3 id="workout-session-title" class="workout-session-title">Mi entrenamiento</h3>
+
+    <div id="session-exercises"></div>
+
+    <button type="button" class="primary-button" id="finish-workout">
+        Finalizar entrenamiento
+    </button>
+
+    <p id="finish-message" class="hint"></p>
+`;
+
+
+
+
+
+
+    // Todas las tarjetas pasan por la misma función.
+    // Esto evita que inicio y edición creen tarjetas diferentes.
+    data.forEach(upsertSessionExercise);
+
+
+try {
+    await guardarSesion("en_progreso");
+    message.textContent = "Sesión iniciada y guardada correctamente.";
+} catch (error) {
+    console.error(error);
+    message.textContent = "No se pudo guardar. Revisa la conexión con Flask.";
+}
+
+
+
+    sessionStatus.innerHTML = '<span class="status-dot"></span> En curso';
+    iniciarCronometro();
+    message.textContent = "Sesión iniciada. ¡A darlo todo!";
+    sessionArea.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    sessionArea.querySelector("#finish-workout").addEventListener("click", () => {
+        if (sessionFinished) return;
+
+        const checks = [...sessionArea.querySelectorAll(".set-complete")];
+        const completed = checks.filter(check => check.checked).length;
+
+        sessionFinished = true;
+        detenerCronometro();
+
+
+sessionArea.querySelector("#finish-workout").textContent =
+    "Entrenamiento finalizado";
+sessionArea.querySelector("#finish-workout").hidden = true;
+
+const resumeButton = document.createElement("button");
+resumeButton.type = "button";
+resumeButton.className = "secondary-button";
+resumeButton.id = "resume-workout";
+resumeButton.textContent = "↻ Reanudar entrenamiento";
+
+sessionArea.insertBefore(
+    resumeButton,
+    sessionArea.querySelector("#finish-message")
+);
+
+resumeButton.addEventListener("click", () => {
+    sessionFinished = false;
+
+    // Reactivar los campos de las series.
+    sessionArea.querySelectorAll("input").forEach(input => {
+        input.disabled = false;
+    });
+
+    // Ocultar el botón de reanudar y volver a mostrar finalizar.
+    resumeButton.remove();
+
+    const finishButton = sessionArea.querySelector("#finish-workout");
+    finishButton.hidden = false;
+    finishButton.disabled = false;
+    finishButton.textContent = "Finalizar entrenamiento";
+
+    sessionArea.querySelector("#finish-message").textContent = "";
+    sessionStatus.innerHTML = '<span class="status-dot"></span> En curso';
+
+//GL
+iniciarCronometro();
+
+    message.textContent = "Entrenamiento reanudado. ¡Continúa con tu sesión!";
+});
+
+
+
+
+        sessionArea.querySelectorAll("input").forEach(input => {
+            input.disabled = true;
+        });
+
+        sessionArea.querySelectorAll(".edit-exercise, .confirm-exercise").forEach(button => {
+            button.disabled = true;
+        });
+
+        sessionArea.querySelector("#finish-workout").disabled = true;
+
+        sessionArea.querySelector("#finish-message").textContent =
+            `Entrenamiento finalizado. Completaste ${completed} de ${checks.length} series.`;
+
+        sessionStatus.innerHTML = '<span class="status-dot"></span> Finalizado';
+
+        message.textContent = "Entrenamiento terminado. ¡Buen trabajo!";
+
+        sessionArea.querySelector("#finish-message").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    });
+});
+
+// Estado inicial.
+updateRoutineSummary();
+
+
+
+
+async function recuperarSesionActiva() {
+    try {
+        const respuesta = await fetch("/api/sesiones/activa");
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo recuperar el entrenamiento.");
+        }
+
+        if (!datos.sesion) {
+            console.log("No hay entrenamientos pendientes.");
+            return;
+        }
+
+        const sesion = datos.sesion;
+
+     currentSessionId = sesion.id;
+    sessionStarted = false;
+    sessionFinished = false;
+
+document.getElementById("training-day").value =
+    sesion.dia_semana;
+
+// Cargar los ejercicios guardados de "Tu rutina".
+await cargarRutinaDelDia(sesion.dia_semana);
+
+// Marcar que la sesión activa ya está recuperándose.
+sessionStarted = true;
+
+document.getElementById("training-name").value =
+    sesion.nombre_rutina;
+
+        // Conservar la estructura y las clases visuales originales.
+
+
+        
+        // Reconstruir la interfaz de la sesión guardada.
+        sessionArea.innerHTML = `
+            <div class="section-heading">
+                <span class="number">03</span>
+                <div>
+                    <h2>Entrenamiento en curso</h2>
+                    <p id="session-progress">0 de 0 series completadas</p>
+                </div>
+            </div>
+
+            <div class="session-dashboard">
+                <div class="session-stat">
+                    <span class="session-stat-label">Tiempo entrenando</span>
+                    <strong id="session-timer" class="session-stat-value is-accent">00:00:00</strong>
+                </div>
+                <div class="session-stat">
+                    <span class="session-stat-label">Ejercicios</span>
+                    <strong id="session-exercise-count" class="session-stat-value">0 / 0</strong>
+                </div>
+                <div class="session-stat">
+                    <span class="session-stat-label">Series completadas</span>
+                    <strong id="session-set-count" class="session-stat-value">0 / 0</strong>
+                </div>
+                <div class="session-stat">
+                    <span class="session-stat-label">Progreso total</span>
+                    <strong id="session-percent" class="session-stat-value is-accent">0%</strong>
+                </div>
+            </div>
+
+
+        <div id="motivation-message" class="motivation-message" aria-live="polite">
+        Cada repetición cuenta. Sigue avanzando.
+        </div>
+
+
+                    <div
+                id="session-progress-track"
+                class="session-progress-track"
+                role="progressbar"
+                aria-label="Progreso del entrenamiento"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+            >
+                <div id="session-progress-fill" class="session-progress-fill"></div>
+            </div>
+
+            <h3 id="workout-session-title" class="workout-session-title">Mi entrenamiento</h3>
+
+            <div id="session-exercises"></div>
+
+            <button type="button" class="primary-button" id="finish-workout">
+                Finalizar entrenamiento
+            </button>
+
+            <p id="finish-message" class="hint"></p>
+        `;
+
+
+
+
+
+
+        sessionArea.hidden = false;
+
+        // Reconstruir las tarjetas con los datos guardados.
+        datos.ejercicios.forEach((ejercicio, index) => {
+            upsertSessionExercise({
+                id: `recuperado-${index}`,
+                name: ejercicio.nombre,
+                series: ejercicio.series
+            });
+
+            const tarjetas = sessionArea.querySelectorAll(
+                ".session-exercise"
+            );
+
+            const tarjeta = tarjetas[tarjetas.length - 1];
+            const titulo = tarjeta.querySelector(
+                ".session-exercise-title"
+            );
+
+            titulo.textContent =
+                `${String(index + 1).padStart(2, "0")} · ${ejercicio.nombre}`;
+        });
+
+        updateProgress();
+
+        if (!sessionFinished) {
+    iniciarCronometro();
+} else {
+    detenerCronometro();
+}
+
+        // Bloquear el inicio de una segunda sesión.
+        startButton.disabled = true;
+        addButton.disabled = true;
+
+        document.querySelectorAll(".unit-button").forEach(button => {
+            button.disabled = true;
+        });
+
+        document.querySelectorAll(
+            "#training-day, #training-name, #training-goal"
+        ).forEach(input => {
+            input.disabled = true;
+        });
+
+        sessionStatus.innerHTML =
+            '<span class="status-dot"></span> En curso';
+
+        message.textContent = "Entrenamiento recuperado correctamente.";
+
+        // Conectar Finalizar también después de recargar la página.
+        const finishButton = sessionArea.querySelector("#finish-workout");
+        const finishMessage = sessionArea.querySelector("#finish-message");
+
+        finishButton.addEventListener("click", async () => {
+            if (sessionFinished) return;
+
+            sessionFinished = true;
+            //GL
+            detenerCronometro();
+
+            finishButton.disabled = true;
+
+            try {
+                await guardarSesion("finalizado");
+
+                const checks = [
+                    ...sessionArea.querySelectorAll(".set-complete")
+                ];
+
+                const completed = checks.filter(check => check.checked).length;
+
+                sessionArea.querySelectorAll("input").forEach(input => {
+                    input.disabled = true;
+                });
+
+                finishButton.hidden = true;
+
+                finishMessage.textContent =
+                    `Entrenamiento finalizado. Completaste ${completed} de ${checks.length} series.`;
+
+                sessionStatus.innerHTML =
+                    '<span class="status-dot"></span> Finalizado';
+
+                const resumeButton = document.createElement("button");
+                resumeButton.type = "button";
+                resumeButton.className = "secondary-button";
+                resumeButton.textContent = "↻ Reanudar entrenamiento";
+
+                sessionArea.insertBefore(resumeButton, finishMessage);
+
+                resumeButton.addEventListener("click", async () => {
+                    sessionFinished = false;
+
+                    sessionArea.querySelectorAll("input").forEach(input => {
+                        input.disabled = false;
+                    });
+
+                    resumeButton.remove();
+                    finishButton.hidden = false;
+                    finishButton.disabled = true;
+                    finishMessage.textContent = "";
+
+                    try {
+                        await guardarSesion("en_progreso");
+
+                        finishButton.disabled = false;
+                        sessionStatus.innerHTML =
+                            '<span class="status-dot"></span> En curso';
+
+
+// Reiniciar el cronómetro al reanudar.
+iniciarCronometro();
+                            message.textContent = "Entrenamiento reanudado.";
+
+                    } catch (error) {
+                        sessionFinished = true;
+                        console.error(error);
+                        finishMessage.textContent =
+                            "No se pudo guardar la reanudación. Intenta de nuevo.";
+                    }
+                });
+
+                message.textContent = "Entrenamiento finalizado. ¡Buen trabajo!";
+            } catch (error) {
+                sessionFinished = false;
+                finishButton.disabled = false;
+                console.error(error);
+
+                finishMessage.textContent =
+                    "No se pudo guardar el final. Intenta de nuevo.";
+            }
+        });
+
+        console.log("Entrenamiento restaurado correctamente.", datos);
+
+console.log("Sesión:", datos.sesion);
+console.log("Ejercicios recuperados:", datos.ejercicios);
+console.log(
+    "Tarjetas visibles:",
+    sessionArea.querySelectorAll(".session-exercise").length
+);
+
+
+console.log(
+    "Series recuperadas:",
+    JSON.stringify(datos.ejercicios[0].series, null, 2)
+);
+
+console.log(
+    "Contenido de la tarjeta:",
+    sessionArea.querySelector(".session-exercise")?.innerHTML
+);
+
+
+
+
+
+
+
+    } catch (error) {
+        console.error("Error al recuperar la sesión:", error);
+        message.textContent = "No se pudo recuperar el entrenamiento.";
+    }
+}
+
+recuperarSesionActiva();
+
+
+
+
+/* BIBLIOTECA DE EJERCICIOS */
+(() => {
+    const results = document.getElementById("library-results");
+    const search = document.getElementById("library-search");
+
+
+
+
+const browser = document.getElementById("library-browser");
+const toggleLibrary = document.getElementById("toggle-library");
+const toggleLibraryText = document.getElementById("toggle-library-text");
+
+if (browser && toggleLibrary) {
+    toggleLibrary.addEventListener("click", () => {
+        const isOpening = browser.hidden;
+
+        browser.hidden = !isOpening;
+        toggleLibrary.setAttribute("aria-expanded", String(isOpening));
+
+        if (toggleLibraryText) {
+            toggleLibraryText.textContent = isOpening
+                ? "− Ocultar ejercicios"
+                : "+ Explorar ejercicios";
+        }
+    });
+}
+
+
+
+    const filters = document.getElementById("library-filters");
+    const count = document.getElementById("library-count");
+    const message = document.getElementById("library-message");
+    const exerciseList = document.getElementById("exercise-list");
+
+    if (!results || !search || !filters || !exerciseList) return;
+
+    let catalog = [];
+    let selectedGroup = "Pecho";
+
+    function normalize(text) {
+        return String(text || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+    }
+
+    function renderLibrary() {
+        const query = normalize(search.value);
+
+        const filtered = catalog.filter(exercise => {
+        const matchesGroup =
+        search.value.trim() !== "" ||
+        exercise.grupo_muscular === selectedGroup;
+
+            const searchableText = normalize([
+                exercise.nombre,
+                exercise.grupo_muscular,
+                exercise.equipamiento,
+                exercise.instrucciones
+            ].join(" "));
+
+            return matchesGroup && searchableText.includes(query);
+        });
+
+        count.textContent = `${filtered.length} ejercicios`;
+        results.replaceChildren();
+
+        if (filtered.length === 0) {
+            const empty = document.createElement("p");
+            empty.textContent = "No encontramos ejercicios con esa búsqueda.";
+            results.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(exercise => {
+            const card = document.createElement("article");
+            card.className = "library-card";
+
+            const group = document.createElement("span");
+            group.className = "library-group";
+            group.textContent = exercise.grupo_muscular;
+
+            const title = document.createElement("h3");
+            title.textContent = exercise.nombre;
+
+            const equipment = document.createElement("p");
+            equipment.textContent = `Equipamiento: ${exercise.equipamiento}`;
+
+            const instructions = document.createElement("p");
+            instructions.textContent = exercise.instrucciones;
+
+            const addButton = document.createElement("button");
+            addButton.type = "button";
+            addButton.className = "library-add";
+            addButton.textContent = "+ Agregar a rutina";
+
+            addButton.addEventListener("click", () => {
+                addExerciseToRoutine(exercise);
+            });
+
+            card.append(group, title, equipment, instructions, addButton);
+            results.appendChild(card);
+        });
+    }
+
+
+    function addExerciseToRoutine(exercise) {
+    const existingExercises = [
+        ...exerciseList.querySelectorAll(".exercise")
+    ];
+
+    const alreadyAdded = existingExercises.some(card => {
+        const input = card.querySelector(
+            '.exercise-title input[type="text"]'
+        );
+
+        return input &&
+            normalize(input.value) === normalize(exercise.nombre);
+    });
+
+    if (alreadyAdded) {
+        message.textContent = `${exercise.nombre} ya está en tu rutina.`;
+        return;
+    }
+
+    let card;
+
+    const placeholder = existingExercises.length === 1 &&
+        !existingExercises[0].querySelector(
+            '.exercise-title input[type="text"]'
+        )?.value.trim();
+
+    if (placeholder) {
+        card = existingExercises[0];
+
+        // Quitar los controles antiguos, si los había.
+        card.querySelectorAll(
+            ".exercise-actions, .delete-exercise"
+        ).forEach(element => element.remove());
+
+        // Permitir que se creen controles nuevos.
+        delete card.dataset.controlsReady;
+        delete card.dataset.confirmed;
+    } else {
+        const template = existingExercises[0];
+
+        if (!template) {
+            message.textContent =
+                "No encontramos una tarjeta base para agregar ejercicios.";
+            return;
+        }
+
+        card = template.cloneNode(true);
+
+        // cloneNode no copia los eventos, así que reiniciamos
+        // los controles de la tarjeta clonada.
+        card.querySelectorAll(
+            ".exercise-actions, .delete-exercise"
+        ).forEach(element => element.remove());
+
+        delete card.dataset.controlsReady;
+        delete card.dataset.confirmed;
+        delete card.dataset.exerciseId;
+
+        card.querySelectorAll("input").forEach(input => {
+            input.disabled = false;
+        });
+
+        exerciseList.appendChild(card);
+    }
+
+    const nameInput = card.querySelector(
+        '.exercise-title input[type="text"]'
+    );
+
+    const fields = card.querySelectorAll(".exercise-fields input");
+
+    if (!nameInput || fields.length < 3) {
+        message.textContent =
+            "No encontramos todos los campos del ejercicio.";
+        return;
+    }
+
+    nameInput.value = exercise.nombre;
+    fields[0].value = 3;
+    fields[1].value = 10;
+    fields[2].value = 0;
+
+    nameInput.disabled = false;
+    fields.forEach(input => {
+        input.disabled = false;
+    });
+
+    // El ejercicio debe confirmarse antes de guardarse.
+    card.dataset.confirmed = "false";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "delete-exercise";
+    deleteButton.textContent = "Eliminar ejercicio";
+
+    deleteButton.addEventListener("click", async () => {
+        if (sessionStarted || sessionFinished) return;
+
+        const confirmedCards = [
+            ...exerciseList.querySelectorAll(
+                '.exercise[data-confirmed="true"]'
+            )
+        ];
+
+        // La API actual requiere al menos un ejercicio por rutina.
+        if (
+            card.dataset.confirmed === "true" &&
+            confirmedCards.length <= 1
+        ) {
+            message.textContent =
+                "Deja al menos un ejercicio en la rutina por ahora.";
+            return;
+        }
+
+        card.remove();
+
+        exerciseList.querySelectorAll(".exercise-index")
+            .forEach((element, index) => {
+                element.textContent =
+                    String(index + 1).padStart(2, "0");
+            });
+
+        updateRoutineSummary();
+
+        const remaining = exerciseList.querySelector(
+            '.exercise[data-confirmed="true"]'
+        );
+
+        if (remaining) {
+            await guardarRutinaHabitual();
+        } else {
+            message.textContent =
+                "Ejercicio eliminado. Confirma los ejercicios restantes para guardar la rutina.";
+        }
+    });
+
+    card.appendChild(deleteButton);
+
+    const indexLabel = card.querySelector(".exercise-index");
+    if (indexLabel) {
+        indexLabel.textContent = String(
+            exerciseList.querySelectorAll(".exercise").length
+        ).padStart(2, "0");
+    }
+
+    setupExerciseCard(card);
+    updateRoutineSummary();
+
+    message.textContent =
+        `${exercise.nombre} agregado. Edita sus datos y pulsa Confirmar ✓ para guardarlo.`;
+
+    card.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+
+
+    search.addEventListener("input", renderLibrary);
+
+    filters.addEventListener("click", event => {
+        const button = event.target.closest("[data-group]");
+
+        if (!button) return;
+
+        selectedGroup = button.dataset.group;
+
+        filters.querySelectorAll("[data-group]").forEach(filter => {
+            filter.classList.toggle("active", filter === button);
+        });
+
+        renderLibrary();
+    });
+
+    async function loadLibrary() {
+        count.textContent = "Cargando...";
+
+        try {
+            const response = await fetch("/api/biblioteca-ejercicios");
+
+            if (response.status === 401 || response.status === 403) {
+                throw new Error("Inicia sesión para consultar la biblioteca.");
+            }
+
+            if (!response.ok) {
+                throw new Error("No se pudo consultar la biblioteca.");
+            }
+
+            const data = await response.json();
+            catalog = data.ejercicios || [];
+
+            renderLibrary();
+        } catch (error) {
+            count.textContent = "Sin conexión";
+            results.replaceChildren();
+
+            const errorText = document.createElement("p");
+            errorText.textContent = error.message;
+            results.appendChild(errorText);
+        }
+    }
+
+    loadLibrary();
+})();
+
+
+/* SELECTOR VISUAL DE OBJETIVOS */
+const goalSelectVisual = document.getElementById("training-goal");
+const goalOptionsVisual = document.getElementById("goal-options");
+
+function actualizarObjetivoVisual() {
+    goalOptionsVisual.querySelectorAll(".goal-option").forEach(button => {
+        const activo = button.dataset.goal === goalSelectVisual.value;
+
+        button.classList.toggle("active", activo);
+        button.setAttribute("aria-pressed", String(activo));
+    });
+}
+
+goalOptionsVisual.addEventListener("click", event => {
+    const button = event.target.closest(".goal-option");
+
+    if (!button) return;
+
+    goalSelectVisual.value = button.dataset.goal;
+    actualizarObjetivoVisual();
+
+    goalSelectVisual.dispatchEvent(
+        new Event("change", { bubbles: true })
+    );
+});
+
+
+async function guardarConfiguracionRutina() {
+    const dia = document.getElementById("training-day").value;
+    if (!dia) return;
+
+    const respuesta = await fetch("/api/rutinas/configuracion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            dia,
+            nombre: document.getElementById("training-name").value.trim()
+                || "Mi entrenamiento",
+            objetivo: goalSelectVisual.value
+        })
+    });
+
+    if (!respuesta.ok) {
+        const resultado = await respuesta.json();
+        throw new Error(resultado.error || "No se pudo guardar.");
+    }
+}
+
+goalSelectVisual.addEventListener("change", () => {
+    actualizarObjetivoVisual();
+
+    guardarConfiguracionRutina().catch(error => {
+        console.error("Error al guardar objetivo:", error);
+        message.textContent = "No se pudo guardar el objetivo.";
+    });
+});
+
+let temporizadorConfiguracionRutina;
+
+document.getElementById("training-name").addEventListener("input", () => {
+    clearTimeout(temporizadorConfiguracionRutina);
+
+    temporizadorConfiguracionRutina = setTimeout(() => {
+        guardarConfiguracionRutina().catch(error => {
+            console.error("Error al guardar nombre:", error);
+        });
+    }, 500);
+});
+
+
+actualizarObjetivoVisual();
+
+
+
+
+
+
+</script>
+</body>
+</html>

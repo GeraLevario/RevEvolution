@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del entrenamiento | RepEvolution</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/entrenamiento.css') }}">
+
+    <style>
+        .detail-page {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .detail-heading {
+            margin-bottom: 28px;
+        }
+
+        .detail-heading h1 {
+            font-size: clamp(30px, 5vw, 46px);
+            margin-bottom: 10px;
+        }
+
+        .detail-meta {
+            color: #858993;
+            line-height: 1.8;
+        }
+
+        .detail-card {
+            background: #191c23;
+            border: 1px solid #2a2d35;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .detail-card h2 {
+            margin-top: 0;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #2a2d35;
+        }
+
+        .detail-table th {
+            color: #858993;
+            font-size: 13px;
+        }
+
+        .detail-table td {
+            color: #f4f4f2;
+        }
+
+        .series-status {
+            color: #ff6d00;
+            font-weight: 700;
+        }
+
+        .detail-message {
+            color: #858993;
+            padding: 16px 0;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .detail-actions a {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            background: #ff6d00;
+            color: #111318;
+        }
+
+        .detail-actions a.secondary {
+            background: #191c23;
+            color: #f4f4f2;
+            border: 1px solid #2a2d35;
+        }
+
+        @media (max-width: 600px) {
+            .detail-card {
+                padding: 14px;
+                overflow-x: auto;
+            }
+
+            .detail-table {
+                min-width: 440px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <a class="brand" href="/">
+        <span class="brand-mark">
+            <svg viewBox="0 0 48 48"
+                 xmlns="http://www.w3.org/2000/svg"
+                 role="img"
+                 aria-label="Logo RepEvolution">
+                <rect x="3" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="8" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="36" y="16" width="4" height="16"
+                      rx="1.5" fill="#FF6D00"/>
+                <rect x="41" y="19" width="4" height="10"
+                      rx="1.5" fill="#FF6D00"/>
+                <path d="M11 24 H17 L23 18 L28 21 L34 14"
+                      fill="none"
+                      stroke="#F4F4F2"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span class="brand-name">Rep<span>Evolution</span></span>
+    </a>
+
+    <div class="header-motivation">
+        SUPERA TUS LÍMITES. MIDE TU EVOLUCIÓN.
+    </div>
+
+    <div class="header-actions">
+        <a class="back-link" href="{{ url_for('pagina_historial') }}">
+            ← Mi historial
+        </a>
+
+        <a class="back-link" href="{{ url_for('inicio') }}">
+            Página principal
+        </a>
+
+        <form action="{{ url_for('logout') }}" method="POST"
+              class="logout-form">
+            <button type="submit" class="logout-button">
+                CERRAR SESIÓN
+            </button>
+        </form>
+    </div>
+</header>
+
+<main class="detail-page">
+    <header class="detail-heading">
+        <h1 id="detail-title">DETALLE DEL ENTRENAMIENTO</h1>
+        <div id="detail-meta" class="detail-meta">
+            Cargando información...
+        </div>
+    </header>
+
+    <div id="detail-exercises">
+        <p class="detail-message">Cargando ejercicios y series...</p>
+    </div>
+
+    <nav class="detail-actions">
+        <a href="{{ url_for('pagina_historial') }}">
+            VOLVER AL HISTORIAL
+        </a>
+        <a class="secondary" href="{{ url_for('entrenamiento') }}">
+            IR A ENTRENAMIENTO
+        </a>
+    </nav>
+</main>
+
+<script>
+async function cargarDetalle() {
+    const contenedor = document.getElementById("detail-exercises");
+    const meta = document.getElementById("detail-meta");
+
+    try {
+        const respuesta = await fetch(
+            "/api/historial/{{ sesion_id }}"
+        );
+
+        if (!respuesta.ok) {
+            if (respuesta.status === 404) {
+                throw new Error(
+                    "No se encontró este entrenamiento o no tienes acceso."
+                );
+            }
+
+            throw new Error("No se pudo consultar el entrenamiento.");
+        }
+
+        const datos = await respuesta.json();
+        const sesion = datos.sesion;
+        const ejercicios = datos.ejercicios || [];
+
+        document.getElementById("detail-title").textContent =
+            sesion.nombre_rutina || "Entrenamiento";
+
+        const fecha = sesion.fecha
+            ? new Date(
+                sesion.fecha.replace(" ", "T")
+              ).toLocaleString("es-MX")
+            : "No disponible";
+
+        meta.textContent =
+            "Fecha: " + fecha +
+            " · Día: " + (sesion.dia_semana || "No especificado") +
+            " · Estado: " + (sesion.estado || "No disponible");
+
+        contenedor.innerHTML = "";
+
+        if (ejercicios.length === 0) {
+            contenedor.innerHTML =
+                '<p class="detail-message">Esta sesión no tiene ejercicios guardados.</p>';
+            return;
+        }
+
+        ejercicios.forEach((ejercicio, indice) => {
+            const tarjeta = document.createElement("section");
+            tarjeta.className = "detail-card";
+
+            const titulo = document.createElement("h2");
+            titulo.textContent =
+                (indice + 1) + ". " + ejercicio.nombre;
+
+            tarjeta.appendChild(titulo);
+
+            const series = ejercicio.series || [];
+
+            if (series.length === 0) {
+                const mensaje = document.createElement("p");
+                mensaje.className = "detail-message";
+                mensaje.textContent = "No hay series registradas.";
+                tarjeta.appendChild(mensaje);
+            } else {
+                const tabla = document.createElement("table");
+                tabla.className = "detail-table";
+
+                tabla.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Serie</th>
+                            <th>Peso (kg)</th>
+                            <th>Repeticiones</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+
+                const cuerpo = tabla.querySelector("tbody");
+
+                series.forEach((serie) => {
+                    const fila = document.createElement("tr");
+
+                    const valores = [
+                        serie.numero_serie,
+                        serie.peso_kg,
+                        serie.repeticiones
+                    ];
+
+                    valores.forEach((valor) => {
+                        const celda = document.createElement("td");
+                        celda.textContent =
+                            valor === null || valor === undefined
+                                ? "—"
+                                : valor;
+                        fila.appendChild(celda);
+                    });
+
+                    const estado = document.createElement("td");
+                    estado.className = "series-status";
+                    estado.textContent =
+                        Number(serie.completada) === 1
+                            ? "Completada"
+                            : "Pendiente";
+
+                    fila.appendChild(estado);
+                    cuerpo.appendChild(fila);
+                });
+
+                tarjeta.appendChild(tabla);
+            }
+
+            contenedor.appendChild(tarjeta);
+        });
+
+    } catch (error) {
+        contenedor.innerHTML = "";
+        const mensaje = document.createElement("p");
+        mensaje.className = "detail-message";
+        mensaje.textContent = error.message;
+        contenedor.appendChild(mensaje);
+        console.error(error);
+    }
+}
+
+cargarDetalle();
+</script>
+</body>
+</html>
